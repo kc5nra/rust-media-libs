@@ -326,6 +326,12 @@ impl ChunkDeserializer {
             // However, since we don't need to deal with reading any more bytes we have already
             // added the delta to the timestamp in the initial timestamp phase, so we don't need
             // to do anything here
+
+            // FMT3 chunks have extended timestamps if most recent 0,1,2 have
+            // 0xFFFFFF timestamp/delta
+            if self.current_header.timestamp >= MAX_INITIAL_TIMESTAMP {
+                let _ = self.buffer.split_to(4);
+            }
             self.current_stage = ParseStage::MessagePayload;
             return Ok(ParseStageResult::Success);
         }
