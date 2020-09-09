@@ -330,6 +330,9 @@ impl ChunkDeserializer {
             // FMT3 chunks have extended timestamps if most recent 0,1,2 have
             // 0xFFFFFF timestamp/delta
             if self.current_header.timestamp >= MAX_INITIAL_TIMESTAMP {
+                if self.current_header_format != ChunkHeaderFormat::Empty && self.buffer.len() < 4 {
+                    return Ok(ParseStageResult::NotEnoughBytes);
+                }
                 let _ = self.buffer.split_to(4);
             }
             self.current_stage = ParseStage::MessagePayload;
