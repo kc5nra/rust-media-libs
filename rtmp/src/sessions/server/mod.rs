@@ -55,6 +55,7 @@ pub struct ServerSession {
     next_request_number: u32,
     current_state: SessionState,
     fms_version: String,
+    mode: Option<u32>,
     object_encoding: f64,
     active_streams: HashMap<u32, ActiveStream>,
     next_stream_id: u32,
@@ -79,6 +80,7 @@ impl ServerSession {
             next_request_number: 0,
             current_state: SessionState::Started,
             fms_version: config.fms_version,
+            mode: config.mode,
             object_encoding: 0.0,
             active_streams: HashMap::new(),
             next_stream_id: 1,
@@ -837,6 +839,9 @@ impl ServerSession {
         let mut command_object_properties = HashMap::new();
         command_object_properties.insert("fmsVer".to_string(), Amf0Value::Utf8String(self.fms_version.clone()));
         command_object_properties.insert("capabilities".to_string(), Amf0Value::Number(31.0));
+        if let Some(mode) = self.mode {
+            command_object_properties.insert("mode".to_string(), Amf0Value::Number(mode as f64));
+        }
 
         let description = "Successfully connected on app: ".to_string() + &app_name;
         let mut additional_properties = create_status_object("status", "NetConnection.Connect.Success", description.as_ref());

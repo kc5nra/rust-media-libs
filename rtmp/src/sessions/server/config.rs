@@ -6,6 +6,7 @@ pub struct ServerSessionConfig {
     pub chunk_size: u32,
     pub peer_bandwidth: u32,
     pub window_ack_size: u32,
+    pub mode: Option<u32>,
 }
 
 impl ServerSessionConfig {
@@ -16,6 +17,7 @@ impl ServerSessionConfig {
             peer_bandwidth: 2_500_000,
             window_ack_size: 1_073_741_824,
             chunk_size: 4096,
+            mode: None,
         }
     }
 }
